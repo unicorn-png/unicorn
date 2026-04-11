@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>温馨提示弹窗</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* 防止页面滚动 */
+        }
+        .tip-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* 使弹窗不影响页面其他交互 */
+            z-index: 9999;
+        }
+        .tip-box {
+            position: absolute;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: "微软雅黑", sans-serif;
+            font-size: 16px;
+            color: #333;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.5s ease-in-out;
+            width: 200px;
+            text-align: center;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="tip-container" id="tipContainer"></div>
+
+    <script>
+        // 温馨提示文本列表
+        const tips = [
+            '多喝水哦~', '保持微笑呀', '每天都要元气满满',
+            '记得吃水果', '保持好心情', '好好爱自己', '我想你了',
+            '梦想成真', '期待下一次见面', '金榜题名',
+            '顺顺利利', '早点休息', '愿所有烦恼都消失',
+            '别熬夜', '今天过得开心嘛', '天冷了，多穿衣服',
+            '你超棒的', '别焦虑啦', '加油冲鸭', '你很特别',
+            '会好起来的', '要自信呀', '笑一个嘛', '摸鱼快乐',
+            '今天加油', '一起努力', '记得想我', '夸夸自己',
+            '夏天防晒', '冬天护手', '雨天路滑', '秋天补水',
+            '大风添衣', '雪天慢行', '按时吃饭~', '少喝冷饮'
+        ];
+
+        // 背景颜色列表（使用RGB或十六进制颜色码）
+        const bgColors = [
+            'lightpink', 'skyblue', 'lightgreen', 'lavender',
+            'lightyellow', 'plum', 'coral', 'bisque', 'aquamarine',
+            'mistyrose', 'honeydew', 'lavenderblush', 'oldlace'
+        ];
+
+        // 获取屏幕尺寸
+        const screenWidth = window.innerWidth;
+        const screenHeight = window.innerHeight;
+        const tipWidth = 200;
+        const tipHeight = 60;
+
+        // 创建并显示弹窗的函数
+        function createTip() {
+            const container = document.getElementById('tipContainer');
+            const tipBox = document.createElement('div');
+            tipBox.className = 'tip-box';
+
+            // 随机选择提示文本和背景颜色
+            const randomTip = tips[Math.floor(Math.random() * tips.length)];
+            const randomBg = bgColors[Math.floor(Math.random() * bgColors.length)];
+
+            tipBox.textContent = randomTip;
+            tipBox.style.backgroundColor = randomBg;
+
+            // 随机设置弹窗位置（确保完全显示在屏幕内）
+            const x = Math.floor(Math.random() * (screenWidth - tipWidth));
+            const y = Math.floor(Math.random() * (screenHeight - tipHeight));
+            tipBox.style.left = `${x}px`;
+            tipBox.style.top = `${y}px`;
+
+            container.appendChild(tipBox);
+
+            // 3秒后移除弹窗
+            setTimeout(() => {
+                tipBox.style.opacity = '0';
+                tipBox.style.transition = 'opacity 0.5s ease-in-out';
+                setTimeout(() => {
+                    container.removeChild(tipBox);
+                }, 500);
+            }, 3000);
+        }
+
+        // 定时创建弹窗（每50毫秒创建一个）
+        setInterval(createTip, 50);
+    </script>
+</body>
+</html>
