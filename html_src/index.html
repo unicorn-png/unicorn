@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HTML 知识手册</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d0f0e;--bg2:#151815;--bg3:#1c1f1c;--bg4:#242724;
+  --fg:#e8e6e1;--fg2:#b0aea5;--fg3:#7a7970;
+  --accent:#d4a843;--accent-d:rgba(212,168,67,.12);--accent-b:rgba(212,168,67,.25);
+  --cyan:#5bb8c9;--cyan-d:rgba(91,184,201,.1);
+  --green:#4a9e6e;--green-d:rgba(74,158,110,.1);
+  --red:#c95a4b;--red-d:rgba(201,90,75,.1);
+  --orange:#d98a3a;--orange-d:rgba(217,138,58,.1);
+  --border:rgba(255,255,255,.06);--border2:rgba(255,255,255,.1);
+  --r:10px;--rs:6px;--tr:.25s cubic-bezier(.4,0,.2,1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:20px}
+body{font-family:'Noto Sans SC','Space Grotesk',sans-serif;background:var(--bg);color:var(--fg);line-height:1.7;overflow-x:hidden}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--fg3)}
+
+/* 侧边栏 */
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:260px;background:var(--bg2);border-right:1px solid var(--border);z-index:100;display:flex;flex-direction:column;transition:transform .35s ease}
+.sidebar-head{padding:20px 18px 14px;border-bottom:1px solid var(--border)}
+.sidebar-head h1{font-family:'Space Grotesk';font-size:1.1rem;font-weight:700;color:var(--accent);display:flex;align-items:center;gap:8px}
+.sidebar-head p{font-size:.72rem;color:var(--fg3);margin-top:4px}
+.sidebar-search{padding:10px 14px}
+.sidebar-search input{width:100%;padding:8px 12px 8px 34px;background:var(--bg);border:1px solid var(--border);border-radius:var(--rs);color:var(--fg);font-size:.82rem;outline:none;transition:var(--tr)}
+.sidebar-search input:focus{border-color:var(--accent-b)}
+.sidebar-search{position:relative}
+.sidebar-search i{position:absolute;left:26px;top:50%;transform:translateY(-50%);color:var(--fg3);font-size:.8rem}
+.sidebar-nav{flex:1;overflow-y:auto;padding:6px 0}
+.nav-cat{padding:8px 18px 4px;font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--fg3)}
+.nav-cat:first-child{padding-top:12px}
+.nav-link{display:flex;align-items:center;gap:8px;padding:6px 18px;font-size:.82rem;color:var(--fg2);text-decoration:none;transition:var(--tr);cursor:pointer;border-left:2px solid transparent}
+.nav-link:hover{color:var(--fg);background:rgba(255,255,255,.02)}
+.nav-link.active{color:var(--accent);border-left-color:var(--accent);background:var(--accent-d)}
+.nav-link i{width:16px;text-align:center;font-size:.72rem;color:var(--fg3)}
+.nav-link.active i{color:var(--accent)}
+.sidebar-count{margin-left:auto;font-size:.68rem;color:var(--fg3);background:var(--bg);padding:1px 7px;border-radius:9px}
+
+/* 主内容 */
+.main{margin-left:260px;min-height:100vh;position:relative}
+.main-inner{max-width:960px;margin:0 auto;padding:30px 32px 80px}
+
+/* 分类标题 */
+.cat-section{margin-bottom:3rem}
+.cat-title{font-family:'Space Grotesk','Noto Sans SC';font-size:1.5rem;font-weight:700;margin-bottom:.3rem;display:flex;align-items:center;gap:10px}
+.cat-title i{font-size:1.1rem;color:var(--accent)}
+.cat-desc{color:var(--fg3);font-size:.88rem;margin-bottom:1.5rem}
+
+/* 标签卡片网格 */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+
+.card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;transition:var(--tr)}
+.card:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.card-head{padding:14px 16px 10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card-tag{font-family:'Space Grotesk',monospace;font-size:1.05rem;font-weight:700;color:var(--accent)}
+.card-badge{font-size:.62rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;padding:2px 8px;border-radius:4px}
+.badge-block{background:var(--accent-d);color:var(--accent)}
+.badge-inline{background:var(--cyan-d);color:var(--cyan)}
+.badge-void{background:var(--red-d);color:var(--red)}
+.badge-meta{background:var(--green-d);color:var(--green)}
+.badge-interactive{background:var(--orange-d);color:var(--orange)}
+.card-attrs{margin-left:auto;display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
+.card-attr{font-family:'Space Grotesk',monospace;font-size:.62rem;color:var(--fg3);background:var(--bg);padding:1px 6px;border-radius:3px;border:1px solid var(--border)}
+.card-desc{padding:0 16px 10px;font-size:.82rem;color:var(--fg2);line-height:1.6}
+.card-code{margin:0 12px;background:var(--bg);border:1px solid var(--border);border-radius:var(--rs);position:relative;overflow:hidden}
+.card-code pre{padding:10px 14px;font-family:'Space Grotesk',monospace;font-size:.76rem;line-height:1.7;color:var(--fg2);overflow-x:auto;white-space:pre}
+.card-code .copy-btn{position:absolute;top:6px;right:6px;background:var(--bg2);border:1px solid var(--border);color:var(--fg3);padding:3px 8px;border-radius:4px;font-size:.65rem;cursor:pointer;transition:var(--tr);font-family:'Noto Sans SC';display:flex;align-items:center;gap:3px}
+.card-code .copy-btn:hover{color:var(--accent);border-color:var(--accent-b)}
+.card-preview{margin:10px 12px 14px;background:#fff;border-radius:var(--rs);padding:12px 16px;color:#1a1a1a;font-family:serif;font-size:.9rem;line-height:1.65;min-height:36px;overflow:hidden}
+.card-preview h1,.card-preview h2,.card-preview h3,.card-preview h4,.card-preview h5,.card-preview h6{font-family:'Noto Sans SC',sans-serif;margin:.2em 0}
+.card-preview p{margin:.3em 0}
+.card-preview ul,.card-preview ol{padding-left:1.4em;margin:.3em 0}
+.card-preview pre{background:#f4f3ef;padding:.8em;border-radius:4px;font-family:monospace;font-size:.85em;overflow-x:auto;margin:.3em 0}
+.card-preview blockquote{border-left:3px solid #d4a843;padding-left:.8em;margin:.3em 0;color:#555;font-style:italic}
+.card-preview table{border-collapse:collapse;width:100%;margin:.3em 0}
+.card-preview th,.card-preview td{border:1px solid #ddd;padding:6px 10px;text-align:left}
+.card-preview th{background:#f5f5f0;font-weight:600}
+.card-preview hr{border:none;border-top:1px solid #ddd;margin:.5em 0}
+.card-preview img{max-width:100%}
+.card-preview details{margin:.3em 0;border:1px solid #e0ddd5;border-radius:4px;padding:6px 10px}
+.card-preview summary{cursor:pointer;font-weight:600}
+.card-preview dialog{border:1px solid #ddd;border-radius:6px;padding:16px}
+.card-preview mark{background:#ffeaa7;padding:0 2px}
+.card-preview input,.card-preview select,.card-preview textarea,.card-preview button{font-family:inherit;font-size:.88em}
+.card-preview input[type="text"],.card-preview input[type="password"],.card-preview input[type="email"],.card-preview input[type="number"],.card-preview input[type="date"],.card-preview input[type="search"],.card-preview input[type="url"],.card-preview input[type="tel"],.card-preview textarea{padding:5px 8px;border:1px solid #ccc;border-radius:4px;width:200px}
+.card-preview select{padding:5px 8px;border:1px solid #ccc;border-radius:4px}
+.card-preview button{padding:5px 16px;border:1px solid #ccc;border-radius:4px;background:#f5f5f0;cursor:pointer}
+.card-preview button:hover{background:#eee}
+.card-preview progress{width:200px}
+.card-preview meter{width:200px}
+.card-preview figure{margin:.3em 0;text-align:center}
+.card-preview figcaption{font-size:.85em;color:#888}
+.card-no-preview{margin:10px 12px 14px;background:var(--bg);border:1px dashed var(--border2);border-radius:var(--rs);padding:10px 14px;font-size:.78rem;color:var(--fg3);text-align:center}
+
+/* 参考表格 */
+.ref-section{margin-bottom:3rem}
+.ref-title{font-family:'Space Grotesk','Noto Sans SC';font-size:1.3rem;font-weight:700;margin-bottom:1rem;display:flex;align-items:center;gap:8px}
+.ref-title i{color:var(--accent);font-size:1rem}
+.ref-table{width:100%;border-collapse:collapse;font-size:.82rem}
+.ref-table thead{position:sticky;top:0}
+.ref-table th{text-align:left;padding:10px 14px;background:var(--bg2);color:var(--fg3);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--border2)}
+.ref-table td{padding:9px 14px;border-bottom:1px solid var(--border);color:var(--fg2);vertical-align:top}
+.ref-table tr:hover td{background:rgba(255,255,255,.015)}
+.ref-table code{font-family:'Space Grotesk',monospace;font-size:.8em;color:var(--accent);background:var(--accent-d);padding:1px 5px;border-radius:3px}
+.ref-table .tag-void::after{content:' ∅';color:var(--red);font-size:.7em}
+
+/* 实体字符网格 */
+.entity-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
+.entity-item{background:var(--bg3);border:1px solid var(--border);border-radius:var(--rs);padding:8px 12px;display:flex;align-items:center;gap:8px;transition:var(--tr);cursor:pointer}
+.entity-item:hover{border-color:var(--border2)}
+.entity-char{font-size:1.3rem;width:32px;height:32px;display:flex;align-items:center;justify-content:center;background:var(--bg);border-radius:4px;flex-shrink:0}
+.entity-info{font-size:.75rem;line-height:1.4}
+.entity-info .en-name{color:var(--fg2);font-weight:500}
+.entity-info .en-code{color:var(--fg3);font-family:'Space Grotesk',monospace;font-size:.7rem}
+
+/* 移动端菜单按钮 */
+.menu-btn{display:none;position:fixed;top:12px;left:12px;z-index:200;width:40px;height:40px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--rs);color:var(--fg);font-size:1rem;cursor:pointer;align-items:center;justify-content:center}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:90}
+
+/* 无结果 */
+.no-results{grid-column:1/-1;text-align:center;padding:3rem;color:var(--fg3);font-size:.95rem}
+
+/* 滚动显现 */
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .5s ease,transform .5s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* 响应式 */
+@media(max-width:860px){
+  .menu-btn{display:flex}
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .sidebar-overlay.open{display:block}
+  .main{margin-left:0}
+  .main-inner{padding:20px 16px 60px;padding-top:60px}
+  .cards{grid-template-columns:1fr}
+  .entity-grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr))}
+}
+
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+
+<button class="menu-btn" id="menuBtn" aria-label="打开导航"><i class="fa-solid fa-bars"></i></button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-head">
+    <h1><i class="fa-solid fa-book"></i> HTML 手册</h1>
+    <p>全部标签 · 属性 · 实体 · 速查</p>
+  </div>
+  <div class="sidebar-search">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <input type="text" id="searchInput" placeholder="搜索标签、属性..." aria-label="搜索">
+  </div>
+  <nav class="sidebar-nav" id="sidebarNav"></nav>
+</aside>
+
+<div class="main">
+  <div class="main-inner" id="mainContent"></div>
+</div>
+
+<script>
+// ===== 全部 HTML 知识数据 =====
+const categories = [
+  {
+    id:'structure', name:'文档骨架', icon:'fa-file-code',
+    desc:'每个 HTML 页面的基础结构，定义文档类型和根容器',
+    elements:[
+      {tag:'<!DOCTYPE html>',type:'meta',desc:'文档类型声明，告诉浏览器使用 HTML5 标准模式渲染。必须位于文档第一行，不是 HTML 标签',code:'<!DOCTYPE html>\n<html>\n  <head>...</head>\n  <body>...</body>\n</html>',noPreview:true},
+      {tag:'<html>',type:'meta',desc:'文档根元素，所有其他元素都必须是它的后代。lang 属性声明页面语言，影响搜索引擎和屏幕阅读器',attrs:['lang'],code:'<html lang="zh-CN">\n  <!-- 页面内容 -->\n</html>',noPreview:true},
+      {tag:'<head>',type:'meta',desc:'文档头部容器，包含元数据、样式、脚本引用等。内容不会直接显示在页面上',code:'<head>\n  <meta charset="UTF-8">\n  <title>页面标题</title>\n  <link rel="stylesheet" href="style.css">\n</head>',noPreview:true},
+      {tag:'<body>',type:'block',desc:'文档主体容器，所有可见内容都放在这里。浏览器窗口中显示的一切都是 body 的后代',code:'<body>\n  <h1>你好世界</h1>\n  <p>这是页面内容</p>\n</body>',preview:'<h1>你好世界</h1><p>这是页面内容</p>'},
+      {tag:'<title>',type:'meta',desc:'页面标题，显示在浏览器标签页上。每个页面必须有且仅有一个 title，也对 SEO 至关重要',code:'<head>\n  <title>我的网页标题</title>\n</head>',noPreview:true},
+    ]
+  },
+  {
+    id:'meta', name:'元信息', icon:'fa-circle-info',
+    desc:'head 区域内的元数据标签，控制编码、视口、SEO、社交分享等',
+    elements:[
+      {tag:'<meta>',type:'void',desc:'自闭合元数据标签。charset 设编码，viewport 控制移动端视口，description/keywords 用于 SEO，og: 系列用于社交分享',attrs:['charset','name','content','http-equiv'],code:'<meta charset="UTF-8">\n<meta name="viewport"\n  content="width=device-width, initial-scale=1.0">\n<meta name="description"\n  content="页面描述">\n<meta property="og:title" content="分享标题">',noPreview:true},
+      {tag:'<link>',type:'void',desc:'引入外部资源。最常用于加载 CSS 样式表，也可用于网站图标、预加载资源等',attrs:['rel','href','type','media'],code:'<link rel="stylesheet" href="style.css">\n<link rel="icon" href="favicon.ico">\n<link rel="preload" href="font.woff2" as="font">',noPreview:true},
+      {tag:'<style>',type:'meta',desc:'内嵌 CSS 样式。应放在 head 中，可通过 media 属性指定生效条件',attrs:['media','type'],code:'<style>\n  body { font-size: 16px; }\n  .highlight { color: gold; }\n</style>',noPreview:true},
+      {tag:'<script>',type:'meta',desc:'内嵌或引入 JavaScript。默认同步加载会阻塞页面渲染，加 defer 或 async 可异步执行',attrs:['src','type','defer','async'],code:'<script src="app.js" defer><\/script>\n<script>\n  console.log("内嵌脚本");\n<\/script>',noPreview:true},
+      {tag:'<base>',type:'void',desc:'为页面所有相对 URL 设置基准地址。一个文档最多一个 base 标签',attrs:['href','target'],code:'<base href="https://example.com/app/">\n<base target="_blank">',noPreview:true},
+      {tag:'<noscript>',type:'block',desc:'当浏览器禁用 JavaScript 时显示的内容。用于提供降级体验',code:'<noscript>\n  <p>请启用 JavaScript 以获得最佳体验</p>\n</noscript>',noPreview:true},
+    ]
+  },
+  {
+    id:'text', name:'文本语义', icon:'fa-font',
+    desc:'表达文本含义的标签，让内容具有语义而不仅仅是视觉样式',
+    elements:[
+      {tag:'<h1> ~ <h6>',type:'block',desc:'六级标题，h1 最重要 h6 最小。页面应有且仅有一个 h1，标题层级不要跳跃（如 h1 直接到 h3）',code:'<h1>一级标题</h1>\n<h2>二级标题</h2>\n<h3>三级标题</h3>\n<h4>四级标题</h4>\n<h5>五级标题</h5>\n<h6>六级标题</h6>',preview:'<h1 style="font-size:1.4em">一级标题</h1><h2 style="font-size:1.2em">二级标题</h2><h3 style="font-size:1.05em">三级标题</h3><h4 style="font-size:.95em">四级标题</h4><h5 style="font-size:.88em">五级标题</h5><h6 style="font-size:.82em">六级标题</h6>'},
+      {tag:'<p>',type:'block',desc:'段落元素，是最基本的文本块级容器。注意：p 内部不能嵌套其他块级元素（如 div、h1）',code:'<p>这是第一个段落。</p>\n<p>这是第二个段落，两个 p 之间会自动产生间距。</p>',preview:'<p>这是第一个段落。</p><p>这是第二个段落，两个 p 之间会自动产生间距。</p>'},
+      {tag:'<span>',type:'inline',desc:'通用行内容器，本身无语义。用于对行内文本应用样式或标记，常配合 class 使用',code:'<p>这段文字中<span style="color:red">红色部分</span>用 span 包裹</p>',preview:'<p>这段文字中<span style="color:red">红色部分</span>用 span 包裹</p>'},
+      {tag:'<br>',type:'void',desc:'换行符，在文本中强制换行。不要用多个 br 来制造间距，那是 margin/padding 的职责',code:'<p>第一行文字<br>第二行文字<br>第三行文字</p>',preview:'<p>第一行文字<br>第二行文字<br>第三行文字</p>'},
+      {tag:'<hr>',type:'void',desc:'水平分隔线，表示主题转换。是块级元素但无子元素，浏览器默认渲染为一条横线',code:'<h2>第一章</h2>\n<p>内容...</p>\n<hr>\n<h2>第二章</h2>',preview:'<h2 style="font-size:1em">第一章</h2><p>内容...</p><hr><h2 style="font-size:1em">第二章</h2>'},
+      {tag:'<pre>',type:'block',desc:'预格式化文本，保留代码中的空格、换行和缩进。常与 code 标签搭配展示代码',code:'<pre><code>function hello() {\n  return "world";\n}</code></pre>',preview:'<pre><code>function hello() {\n  return "world";\n}</code></pre>'},
+      {tag:'<code>',type:'inline',desc:'行内代码片段标记。在 pre 内用于标记代码，在段落中用于标记变量名、命令等短代码',code:'<p>使用 <code>console.log()</code> 输出调试信息</p>',preview:'<p>使用 <code style="background:#f0efe8;padding:1px 4px;border-radius:3px">console.log()</code> 输出调试信息</p>'},
+      {tag:'<blockquote>',type:'block',desc:'块级引用，表示从其他来源引用的大段内容。浏览器默认加左边距和斜体',attrs:['cite'],code:'<blockquote cite="https://example.com">\n  <p>学而不思则罔，思而不学则殆。</p>\n  <footer>—— 孔子</footer>\n</blockquote>',preview:'<blockquote><p>学而不思则罔，思而不学则殆。</p><footer>—— 孔子</footer></blockquote>'},
+      {tag:'<q>',type:'inline',desc:'行内引用，用于段落中的短引用。浏览器会自动添加引号',attrs:['cite'],code:'<p>孔子说：<q>学而不思则罔</q>，这句话很有道理。</p>',preview:'<p>孔子说：<q>学而不思则罔</q>，这句话很有道理。</p>'},
+      {tag:'<abbr>',type:'inline',desc:'缩写标记，title 属性提供完整展开形式。鼠标悬停时浏览器会显示完整文本',attrs:['title'],code:'<p><abbr title="HyperText Markup Language">HTML</abbr> 是网页的基础语言。</p>',preview:'<p><abbr title="HyperText Markup Language" style="text-decoration:underline dotted">HTML</abbr> 是网页的基础语言。</p>'},
+      {tag:'<mark>',type:'inline',desc:'高亮标记，表示文本因为某种原因被突出显示（如搜索结果中的匹配词）',code:'<p>搜索结果中<mark>关键词</mark>会被高亮显示</p>',preview:'<p>搜索结果中<mark>关键词</mark>会被高亮显示</p>'},
+      {tag:'<strong>',type:'inline',desc:'强调重要性，比 em 更强。屏幕阅读器会用不同语气读出。不要仅为了加粗而使用',code:'<p><strong>警告：</strong>此操作不可撤销。</p>',preview:'<p><strong>警告：</strong>此操作不可撤销。</p>'},
+      {tag:'<em>',type:'inline',desc:'语气强调，改变句子含义。屏幕阅读器会用重音读出。与 strong 不同，em 表示强调语气',code:'<p>我<em>真的</em>没有说过那句话。</p>',preview:'<p>我<em>真的</em>没有说过那句话。</p>'},
+      {tag:'<del> / <ins>',type:'inline',desc:'del 标记被删除的内容，ins 标记新插入的内容。常用于显示文档修改',attrs:['cite','datetime'],code:'<p>价格从 <del>¥299</del> <ins>¥199</ins></p>',preview:'<p>价格从 <del>¥299</del> <ins>¥199</ins></p>'},
+      {tag:'<sub> / <sup>',type:'inline',desc:'sub 下标，sup 上标。用于化学式、数学公式、脚注标记等',code:'<p>H<sub>2</sub>O，E=mc<sup>2</sup></p>',preview:'<p>H<sub>2</sub>O，E=mc<sup>2</sup></p>'},
+      {tag:'<small>',type:'inline',desc:'附属细则，如免责声明、版权声明、法律条款。表示"不太重要"的旁注',code:'<p>免费配送<small>（仅限一线城市）</small></p>',preview:'<p>免费配送<small>（仅限一线城市）</small></p>'},
+      {tag:'<b> / <i> / <u>',type:'inline',desc:'无语义的视觉样式标签。b 加粗、i 斜体、u 下划线。HTML5 中仅在没有更合适的语义标签时使用',code:'<p><b>加粗</b> <i>斜体</i> <u>下划线</u></p>',preview:'<p><b>加粗</b> <i>斜体</i> <u>下划线</u></p>'},
+      {tag:'<!-- 注释 -->',type:'meta',desc:'HTML 注释，不会显示在页面上，用于代码说明。也可临时隐藏代码块',code:'<!-- 这是一个单行注释 -->\n<!--\n  这是一个\n  多行注释\n-->\n<p>可见内容</p>',preview:'<p style="color:#888;font-style:italic"><!-- 注释在页面中不可见 --> 可见内容</p>'},
+    ]
+  },
+  {
+    id:'list', name:'列表', icon:'fa-list',
+    desc:'有序列表、无序列表和定义列表，用于组织相关条目',
+    elements:[
+      {tag:'<ul>',type:'block',desc:'无序列表，子元素只能是 li。默认显示圆点标记。可通过 list-style-type 改变标记样式',code:'<ul>\n  <li>苹果</li>\n  <li>香蕉</li>\n  <li>橘子</li>\n</ul>',preview:'<ul><li>苹果</li><li>香蕉</li><li>橘子</li></ul>'},
+      {tag:'<ol>',type:'block',desc:'有序列表，子元素只能是 li。默认数字编号，可通过 type 属性切换字母、罗马数字等',attrs:['type','start','reversed'],code:'<ol type="I" start="3">\n  <li>第三项</li>\n  <li>第四项</li>\n  <li>第五项</li>\n</ol>',preview:'<ol type="I" start="3"><li>第三项</li><li>第四项</li><li>第五项</li></ol>'},
+      {tag:'<li>',type:'block',desc:'列表项，必须是 ul/ol 的直接子元素。li 内部可以包含任何块级元素',attrs:['value'],code:'<ul>\n  <li>\n    <h4>水果</h4>\n    <p>苹果、香蕉、橘子</p>\n  </li>\n</ul>',preview:'<ul><li><h4 style="margin:0;font-size:.9em">水果</h4><p style="margin:2px 0 0;font-size:.85em">苹果、香蕉、橘子</p></li></ul>'},
+      {tag:'<dl>',type:'block',desc:'定义列表，包含 dt（术语）和 dd（描述）对。用于词汇表、FAQ、元数据等',code:'<dl>\n  <dt>HTML</dt>\n  <dd>超文本标记语言</dd>\n  <dt>CSS</dt>\n  <dd>层叠样式表</dd>\n</dl>',preview:'<dl><dt>HTML</dt><dd>超文本标记语言</dd><dt>CSS</dt><dd>层叠样式表</dd></dl>'},
+      {tag:'<dt> / <dd>',type:'block',desc:'dt 定义术语，dd 定义描述。一个 dt 可以对应多个 dd，反之亦然',code:'<dl>\n  <dt>颜色</dt>\n  <dd>红色</dd>\n  <dd>蓝色</dd>\n</dl>',preview:'<dl><dt>颜色</dt><dd>红色</dd><dd>蓝色</dd></dl>'},
+    ]
+  },
+  {
+    id:'table', name:'表格', icon:'fa-table',
+    desc:'展示二维数据的结构化表格，由行列组成',
+    elements:[
+      {tag:'<table>',type:'block',desc:'表格根容器。包含 thead、tbody、tfoot、tr 等子元素。border-collapse 控制边框合并',code:'<table>\n  <thead>...</thead>\n  <tbody>...</tbody>\n</table>',noPreview:true},
+      {tag:'<caption>',type:'block',desc:'表格标题，必须是 table 的第一个子元素。默认居中显示在表格上方',code:'<table>\n  <caption>2024年销售数据</caption>\n  <tr><th>月份</th><th>销售额</th></tr>\n  <tr><td>1月</td><td>10万</td></tr>\n</table>',preview:'<table><caption>2024年销售数据</caption><tr><th>月份</th><th>销售额</th></tr><tr><td>1月</td><td>10万</td></tr></table>'},
+      {tag:'<thead> / <tbody> / <tfoot>',type:'block',desc:'表格的结构分区：表头、表体、表尾。用于样式区分和打印时每页重复表头',code:'<table>\n  <thead>\n    <tr><th>名称</th><th>价格</th></tr>\n  </thead>\n  <tbody>\n    <tr><td>苹果</td><td>5元</td></tr>\n  </tbody>\n  <tfoot>\n    <tr><td>合计</td><td>5元</td></tr>\n  </tfoot>\n</table>',preview:'<table><thead><tr><th>名称</th><th>价格</th></tr></thead><tbody><tr><td>苹果</td><td>5元</td></tr><tr><td>香蕉</td><td>3元</td></tr></tbody><tfoot><tr><td>合计</td><td>8元</td></tr></tfoot></table>'},
+      {tag:'<tr>',type:'block',desc:'表格行，包含若干 th 或 td 单元格',code:'<tr>\n  <td>单元格1</td>\n  <td>单元格2</td>\n</tr>',noPreview:true},
+      {tag:'<th> / <td>',type:'block',desc:'th 表头单元格（默认加粗居中），td 数据单元格。colspan 和 rowspan 实现合并',attrs:['colspan','rowspan','headers','scope'],code:'<tr>\n  <th>姓名</th>\n  <th colspan="2">联系方式</th>\n</tr>\n<tr>\n  <td>张三</td>\n  <td>电话</td>\n  <td>邮箱</td>\n</tr>',preview:'<table><tr><th>姓名</th><th colspan="2">联系方式</th></tr><tr><td>张三</td><td>138xxxx</td><td>a@b.com</td></tr></table>'},
+      {tag:'<colgroup> / <col>',type:'void',desc:'列分组和列定义，用于为整列设置样式。放在 caption 之后、thead 之前',attrs:['span'],code:'<colgroup>\n  <col style="width:30%">\n  <col style="width:70%">\n</colgroup>',noPreview:true},
+    ]
+  },
+  {
+    id:'form', name:'表单控件', icon:'fa-rectangle-list',
+    desc:'收集和提交用户输入的各种控件',
+    elements:[
+      {tag:'<form>',type:'block',desc:'表单容器，定义数据提交的目标和方式。action 指定服务器地址，method 指定请求方法',attrs:['action','method','enctype','target','autocomplete','novalidate'],code:'<form action="/api" method="POST">\n  <input name="user" type="text">\n  <button type="submit">提交</button>\n</form>',preview:'<form onsubmit="return false"><input name="user" type="text" placeholder="用户名" style="padding:4px 8px;border:1px solid #ccc;border-radius:4px;margin-right:6px"><button type="submit" style="padding:4px 14px;border:1px solid #ccc;border-radius:4px;background:#f5f5f0;cursor:pointer">提交</button></form>'},
+      {tag:'<input>',type:'void',desc:'最常用的表单控件，通过 type 属性变换为文本框、密码框、复选框等 20+ 种形态',attrs:['type','name','value','placeholder','required','disabled','readonly','maxlength','pattern','min','max','step'],code:'<!-- 文本类 -->\n<input type="text" placeholder="文本">\n<input type="password" placeholder="密码">\n<input type="email" placeholder="邮箱">\n<input type="number" min="0" max="100">\n<input type="date">\n<input type="search" placeholder="搜索">\n<input type="tel" placeholder="电话">\n<input type="url" placeholder="网址">\n\n<!-- 选择类 -->\n<input type="checkbox"> 同意协议\n<input type="radio" name="sex"> 男\n<input type="radio" name="sex"> 女\n<input type="range" min="0" max="100">\n<input type="color" value="#ff6600">\n\n<!-- 特殊类 -->\n<input type="file" accept="image/*">\n<input type="hidden" name="id" value="1">\n<input type="submit" value="提交">',preview:'<div style="display:flex;flex-direction:column;gap:6px;font-size:.85em"><div><input type="text" placeholder="文本输入" style="padding:4px 8px;border:1px solid #ccc;border-radius:4px;width:180px"></div><div><input type="password" placeholder="密码输入" style="padding:4px 8px;border:1px solid #ccc;border-radius:4px;width:180px"></div><div><input type="number" min="0" max="100" value="50" style="padding:4px 8px;border:1px solid #ccc;border-radius:4px;width:180px"></div><div><input type="date" style="padding:4px 8px;border:1px solid #ccc;border-radius:4px;width:180px"></div><div><input type="range" min="0" max="100" value="60" style="width:180px"></div><div><input type="color" value="#d4a843" style="width:40px;height:28px;border:1px solid #ccc;border-radius:4px;cursor:pointer"> <input type="checkbox"> 同意 <input type="radio" name="r"> A <input type="radio" name="r"> B</div></div>'},
+      {tag:'<textarea>',type:'inline',desc:'多行文本输入区域。rows 和 cols 设初始大小，用户可拖拽调整（可用 resize 控制）',attrs:['rows','cols','placeholder','maxlength','wrap','readonly'],code:'<textarea rows="3" cols="30"\n  placeholder="请输入内容...">\n</textarea>',preview:'<textarea rows="3" cols="30" placeholder="请输入内容..." style="padding:6px 8px;border:1px solid #ccc;border-radius:4px;font-family:inherit;font-size:.88em"></textarea>'},
+      {tag:'<select> / <option>',type:'inline',desc:'下拉选择框。select 包含 option 列表，option 的 value 是提交值，文本是显示内容',attrs:['multiple','size','required'],code:'<select name="city">\n  <option value="">请选择</option>\n  <option value="bj">北京</option>\n  <option value="sh">上海</option>\n  <option value="gz">广州</option>\n</select>',preview:'<select style="padding:4px 8px;border:1px solid #ccc;border-radius:4px"><option value="">请选择</option><option value="bj">北京</option><option value="sh">上海</option><option value="gz">广州</option></select>'},
+      {tag:'<optgroup>',type:'block',desc:'选项分组，在 select 内将 option 归类，label 属性显示组名（不可选）',attrs:['label'],code:'<select>\n  <optgroup label="水果">\n    <option>苹果</option>\n    <option>香蕉</option>\n  </optgroup>\n  <optgroup label="蔬菜">\n    <option>白菜</option>\n    <option>萝卜</option>\n  </optgroup>\n</select>',preview:'<select style="padding:4px 8px;border:1px solid #ccc;border-radius:4px"><optgroup label="水果"><option>苹果</option><option>香蕉</option></optgroup><optgroup label="蔬菜"><option>白菜</option><option>萝卜</option></optgroup></select>'},
+      {tag:'<button>',type:'inline',desc:'按钮元素，type 属性决定行为：submit 提交表单、reset 重置表单、button 自定义行为',attrs:['type','disabled'],code:'<button type="submit">提交</button>\n<button type="reset">重置</button>\n<button type="button">自定义</button>',preview:'<div style="display:flex;gap:6px"><button type="button" style="padding:5px 14px;border:1px solid #ccc;border-radius:4px;background:#f5f5f0;cursor:pointer">提交</button><button type="button" style="padding:5px 14px;border:1px solid #ccc;border-radius:4px;background:#f5f5f0;cursor:pointer">重置</button><button type="button" style="padding:5px 14px;border:1px solid #ccc;border-radius:4px;background:#f5f5f0;cursor:pointer">自定义</button></div>'},
+      {tag:'<label>',type:'inline',desc:'表单控件的文本标签。for 属性关联控件的 id，点击 label 会聚焦对应控件，扩大点击区域',attrs:['for'],code:'<label for="email">邮箱：</label>\n<input id="email" type="email">\n\n<!-- 隐式关联 -->\n<label>\n  <input type="checkbox"> 同意协议\n</label>',preview:'<div style="display:flex;flex-direction:column;gap:8px;font-size:.85em"><div><label for="demolabel" style="cursor:pointer">邮箱：</label><input id="demolabel" type="email" placeholder="your@email.com" style="padding:4px 8px;border:1px solid #ccc;border-radius:4px"></div><label style="cursor:pointer"><input type="checkbox"> 同意协议</label></div>'},
+      {tag:'<fieldset> / <legend>',type:'block',desc:'fieldset 将表单控件分组，legend 提供组标题。视觉上显示为带边框的分组',attrs:['disabled','form','name'],code:'<fieldset>\n  <legend>个人信息</legend>\n  <label>姓名：<input type="text"></label><br>\n  <label>年龄：<input type="number"></label>\n</fieldset>',preview:'<fieldset style="border:1px solid #ccc;border-radius:4px;padding:10px"><legend style="font-size:.85em;padding:0 6px">个人信息</legend><div style="display:flex;flex-direction:column;gap:4px;font-size:.85em"><label>姓名：<input type="text" style="padding:3px 6px;border:1px solid #ccc;border-radius:3px"></label><label>年龄：<input type="number" style="padding:3px 6px;border:1px solid #ccc;border-radius:3px;width:80px"></label></div></fieldset>'},
+      {tag:'<datalist>',type:'block',desc:'输入建议列表，与 input 配合提供自动补全选项。用户也可以输入不在列表中的值',code:'<input list="langs" placeholder="编程语言">\n<datalist id="langs">\n  <option value="JavaScript">\n  <option value="Python">\n  <option value="Rust">\n</datalist>',preview:'<div style="font-size:.85em"><input list="dl1" placeholder="输入或选择..." style="padding:4px 8px;border:1px solid #ccc;border-radius:4px;width:180px"><datalist id="dl1"><option value="JavaScript"><option value="Python"><option value="Rust"><option value="Go"><option value="TypeScript"></datalist></div>'},
+      {tag:'<output>',type:'inline',desc:'计算结果输出容器，与 for 属性关联参与计算的控件。语义化标记"这是计算结果"',attrs:['for','form','name'],code:'<form oninput="result.value=\n  a.valueAsNumber + b.valueAsNumber">\n  <input type="number" id="a" value="10"> +\n  <input type="number" id="b" value="20"> =\n  <output name="result" for="a b">30</output>\n</form>',preview:'<form oninput="this.querySelector(\'output\').value=Number(this.querySelector(\'[name=a]\').value)+Number(this.querySelector(\'[name=b]\').value)" style="font-size:.85em"><input type="number" name="a" value="10" style="padding:3px 6px;border:1px solid #ccc;border-radius:3px;width:60px"> + <input type="number" name="b" value="20" style="padding:3px 6px;border:1px solid #ccc;border-radius:3px;width:60px"> = <output style="font-weight:bold">30</output></form>'},
+      {tag:'<progress>',type:'inline',desc:'进度条，显示任务完成进度。value 为当前值，max 为最大值。无 value 时显示不确定进度',attrs:['value','max'],code:'<progress value="70" max="100"></progress>\n<progress></progress> <!-- 不确定进度 -->',preview:'<div style="display:flex;flex-direction:column;gap:8px;font-size:.85em"><div><progress value="70" max="100" style="width:200px"></progress> 70%</div><div><progress style="width:200px"></progress> 加载中...</div></div>'},
+      {tag:'<meter>',type:'inline',desc:'度量条，显示已知范围内的标量值（如磁盘用量）。有 low/high/optimum 定义好/中/差区间',attrs:['value','min','max','low','high','optimum'],code:'<meter value="0.3" min="0" max="1"\n  low="0.25" high="0.75" optimum="0.5">\n  30%\n</meter>',preview:'<div style="display:flex;flex-direction:column;gap:8px;font-size:.85em"><div><meter value="0.3" min="0" max="1" low="0.25" high="0.75" optimum="0.5" style="width:200px"></meter> 磁盘 30%</div><div><meter value="0.8" min="0" max="1" low="0.25" high="0.75" optimum="0.5" style="width:200px"></meter> 磁盘 80%</div></div>'},
+    ]
+  },
+  {
+    id:'media', name:'媒体资源', icon:'fa-image',
+    desc:'图片、音视频、画布等多媒体内容标签',
+    elements:[
+      {tag:'<img>',type:'void',desc:'图片元素，最重要的空元素之一。src 指定图片路径，alt 提供替代文本（无障碍和 SEO 必需）',attrs:['src','alt','width','height','loading','decoding','srcset','sizes'],code:'<img src="photo.jpg"\n  alt="风景照片"\n  width="600" height="400"\n  loading="lazy">',preview:'<div style="background:linear-gradient(135deg,#f0efe8,#e0ddd5);border-radius:6px;height:80px;display:flex;align-items:center;justify-content:center;color:#999;font-size:.8em"><i class="fa-regular fa-image" style="margin-right:6px"></i>图片占位 (img 标签)</div>'},
+      {tag:'<picture>',type:'inline',desc:'响应式图片容器，包含多个 source 和一个 img。浏览器根据条件选择最合适的图片',code:'<picture>\n  <source media="(min-width:800px)"\n    srcset="large.jpg">\n  <source media="(min-width:400px)"\n    srcset="medium.jpg">\n  <img src="small.jpg" alt="照片">\n</picture>',noPreview:true},
+      {tag:'<video>',type:'inline',desc:'视频播放器。src 或 source 指定视频源，controls 显示控制栏，autoplay 自动播放（通常需加 muted）',attrs:['src','controls','autoplay','muted','loop','poster','width','height','preload'],code:'<video controls width="400" poster="cover.jpg">\n  <source src="video.mp4" type="video/mp4">\n  <source src="video.webm" type="video/webm">\n  您的浏览器不支持视频播放\n</video>',preview:'<div style="background:linear-gradient(135deg,#1a1a2e,#16213e);border-radius:6px;height:80px;display:flex;align-items:center;justify-content:center;color:#666;font-size:.8em"><i class="fa-solid fa-play-circle" style="margin-right:6px;font-size:1.2em"></i>视频播放器 (video 标签)</div>'},
+      {tag:'<audio>',type:'inline',desc:'音频播放器。与 video 类似的属性，但没有 poster 和尺寸属性',attrs:['src','controls','autoplay','muted','loop','preload'],code:'<audio controls>\n  <source src="music.mp3" type="audio/mpeg">\n  <source src="music.ogg" type="audio/ogg">\n  您的浏览器不支持音频播放\n</audio>',preview:'<div style="background:#f5f5f0;border-radius:6px;padding:12px;display:flex;align-items:center;gap:10px"><i class="fa-solid fa-music" style="color:#999;font-size:1.1em"></i><div style="flex:1;height:4px;background:#ddd;border-radius:2px;position:relative"><div style="width:35%;height:100%;background:#d4a843;border-radius:2px"></div></div><span style="font-size:.75em;color:#999">1:23 / 3:45</span></div>'},
+      {tag:'<canvas>',type:'inline',desc:'画布元素，通过 JavaScript 的 Canvas API 绘制图形、动画、游戏画面等。本身只是一个绘图画布',attrs:['width','height'],code:'<canvas id="myCanvas"\n  width="400" height="300">\n</canvas>\n<script>\n  const ctx = document.getElementById(\'myCanvas\');\n  ctx.getContext(\'2d\');\n  // 绘制图形...\n<\/script>',preview:'<div style="background:linear-gradient(135deg,#f0efe8,#e8e6e1);border-radius:6px;height:80px;display:flex;align-items:center;justify-content:center;color:#999;font-size:.8em"><i class="fa-solid fa-paintbrush" style="margin-right:6px"></i>画布区域 (canvas 标签)</div>'},
+      {tag:'<svg>',type:'inline',desc:'可缩放矢量图形容器，直接在 HTML 中嵌入 SVG 图形。支持路径、形状、渐变、动画等',code:'<svg width="100" height="100" viewBox="0 0 100 100">\n  <circle cx="50" cy="50" r="40"\n    fill="gold" stroke="orange" stroke-width="2"/>\n</svg>',preview:'<svg width="60" height="60" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="#d4a843" stroke="#b8922e" stroke-width="2"/></svg><span style="font-size:.85em;margin-left:8px;color:#666">SVG 矢量圆形</span>'},
+      {tag:'<map> / <area>',type:'inline',desc:'图像地图，在 img 上定义可点击的热区。map 的 name 关联 img 的 usemap',attrs:['name','shape','coords','href','alt'],code:'<img src="plan.jpg" usemap="#mymap" alt="平面图">\n<map name="mymap">\n  <area shape="rect" coords="0,0,50,50"\n    href="room1.html" alt="房间1">\n  <area shape="circle" coords="75,75,25"\n    href="room2.html" alt="房间2">\n</map>',noPreview:true},
+    ]
+  },
+  {
+    id:'embed', name:'嵌入内容', icon:'fa-window-restore',
+    desc:'嵌入外部页面、插件等第三方内容',
+    elements:[
+      {tag:'<iframe>',type:'inline',desc:'内联框架，在当前页面中嵌入另一个 HTML 页面。有安全沙箱限制，可通过 sandbox 属性精细控制权限',attrs:['src','width','height','sandbox','allow','loading','referrerpolicy','name'],code:'<iframe src="https://example.com"\n  width="600" height="400"\n  sandbox="allow-scripts"\n  loading="lazy"\n  title="嵌入页面">\n</iframe>',noPreview:true},
+      {tag:'<embed>',type:'void',desc:'嵌入外部内容（如 PDF、Flash 等插件）。HTML5 中推荐用 object 或 iframe 替代',attrs:['src','type','width','height'],code:'<embed src="doc.pdf" type="application/pdf"\n  width="600" height="400">',noPreview:true},
+      {tag:'<object>',type:'inline',desc:'嵌入外部资源容器，可包含 param 子元素传递参数。比 embed 更灵活，可提供后备内容',attrs:['data','type','width','height'],code:'<object data="doc.pdf" type="application/pdf"\n  width="600" height="400">\n  <p>您的浏览器不支持 PDF 预览</p>\n</object>',noPreview:true},
+    ]
+  },
+  {
+    id:'semantic', name:'语义化布局', icon:'fa-layer-group',
+    desc:'HTML5 语义化标签，描述页面结构而非外观，提升可访问性和 SEO',
+    elements:[
+      {tag:'<header>',type:'block',desc:'页眉区域，通常包含网站 Logo、导航、搜索框等。页面可以有多个 header（如文章内的 header）',code:'<header>\n  <h1>网站名称</h1>\n  <nav>...</nav>\n</header>',noPreview:true},
+      {tag:'<nav>',type:'block',desc:'导航区域，包含主要导航链接。一个页面可有多个 nav（主导航、侧栏导航、页脚导航等）',code:'<nav>\n  <a href="/">首页</a>\n  <a href="/about">关于</a>\n  <a href="/contact">联系</a>\n</nav>',preview:'<nav style="display:flex;gap:16px;font-size:.88em"><a href="#" onclick="return false" style="color:#d4a843;text-decoration:none;font-weight:600">首页</a><a href="#" onclick="return false" style="color:#666;text-decoration:none">关于</a><a href="#" onclick="return false" style="color:#666;text-decoration:none">联系</a></nav>'},
+      {tag:'<main>',type:'block',desc:'页面主体内容，每个页面只应有一个。不包含 nav、header、footer、aside 等重复性内容',code:'<body>\n  <header>...</header>\n  <main>\n    <article>...</article>\n  </main>\n  <footer>...</footer>\n</body>',noPreview:true},
+      {tag:'<section>',type:'block',desc:'独立章节/分区，通常带标题。比 div 有语义，表示内容的一个主题分组',code:'<section>\n  <h2>产品特点</h2>\n  <p>特点描述...</p>\n</section>',noPreview:true},
+      {tag:'<article>',type:'block',desc:'独立的、完整的内容块，如博客文章、新闻报道、用户评论。即使脱离上下文也有意义',code:'<article>\n  <header>\n    <h2>文章标题</h2>\n    <time>2024-01-15</time>\n  </header>\n  <p>文章正文...</p>\n</article>',noPreview:true},
+      {tag:'<aside>',type:'block',desc:'侧边栏内容，与主内容相关但可独立存在，如相关文章、广告、作者简介等',code:'<aside>\n  <h3>相关推荐</h3>\n  <ul>\n    <li>推荐文章一</li>\n    <li>推荐文章二</li>\n  </ul>\n</aside>',noPreview:true},
+      {tag:'<footer>',type:'block',desc:'页脚区域，通常包含版权信息、联系方式、站点地图等。页面和文章都可有 footer',code:'<footer>\n  <p>&copy; 2024 版权所有</p>\n  <nav>隐私政策 | 使用条款</nav>\n</footer>',noPreview:true},
+      {tag:'<figure> / <figcaption>',type:'block',desc:'图文组合容器。figure 包裹图片/代码/表格等，figcaption 提供说明文字',code:'<figure>\n  <img src="chart.png" alt="销售图表">\n  <figcaption>图1：2024年月度销售趋势</figcaption>\n</figure>',preview:'<figure style="margin:0"><div style="background:linear-gradient(135deg,#f0efe8,#e8e6e1);border-radius:6px;height:60px;display:flex;align-items:center;justify-content:center;color:#999;font-size:.8em"><i class="fa-regular fa-image" style="margin-right:4px"></i>图片</div><figcaption style="font-size:.82em;color:#888;margin-top:4px">图1：2024年月度销售趋势</figcaption></figure>'},
+      {tag:'<details> / <summary>',type:'block',desc:'可折叠的详情组件。summary 是折叠标题（始终可见），其余内容点击展开/收起。原生无需 JS',attrs:['open'],code:'<details>\n  <summary>点击展开常见问题</summary>\n  <p>这里是答案内容...</p>\n</details>\n\n<!-- 默认展开 -->\n<details open>\n  <summary>默认展开的项</summary>\n  <p>内容...</p>\n</details>',preview:'<details><summary style="cursor:pointer;font-weight:600">点击展开常见问题</summary><p style="font-size:.88em">这里是答案内容，点击 summary 可以切换显示和隐藏。</p></details>'},
+      {tag:'<address>',type:'block',desc:'联系信息块，表示文章作者或组织机构的联系方式。通常显示为斜体',code:'<address>\n  作者：张三<br>\n  邮箱：<a href="mailto:z@example.com">z@example.com</a>\n</address>',preview:'<address style="font-style:italic;font-size:.88em;color:#666">作者：张三<br>邮箱：<a href="#" onclick="return false" style="color:#d4a843">z@example.com</a></address>'},
+      {tag:'<dialog>',type:'block',desc:'对话框/模态框元素。可通过 showModal() 显示为模态框，close() 关闭。原生提供遮罩和焦点管理',attrs:['open'],code:'<dialog id="myDialog">\n  <h3>提示</h3>\n  <p>确定要删除吗？</p>\n  <button onclick="this.closest(\'dialog\').close()">确定</button>\n</dialog>\n<button onclick="document.getElementById(\'myDialog\').showModal()">打开</button>',preview:'<button onclick="this.nextElementSibling.showModal()" style="padding:5px 14px;border:1px solid #ccc;border-radius:4px;background:#f5f5f0;cursor:pointer;font-size:.85em">打开对话框</button><dialog onclick="if(event.target===this)this.close()" style="border:1px solid #ddd;border-radius:8px;padding:20px"><h3 style="margin:0 0 8px;font-size:1em">提示</h3><p style="margin:0 0 12px;font-size:.88em;color:#666">这是一个原生 dialog 对话框</p><button onclick="this.closest(\'dialog\').close()" style="padding:5px 14px;border:1px solid #ccc;border-radius:4px;background:#f5f5f0;cursor:pointer;font-size:.85em">关闭</button></dialog>'},
+      {tag:'<time>',type:'inline',desc:'时间标记，datetime 属性提供机器可读的时间格式。有利于搜索引擎理解和日历应用提取',attrs:['datetime'],code:'<time datetime="2024-01-15">2024年1月15日</time>\n<time datetime="2024-01-15T10:30:00">\n  上午10:30\n</time>',preview:'<p style="font-size:.88em">发布于 <time datetime="2024-01-15" style="color:#d4a843;font-weight:500">2024年1月15日</time></p>'},
+      {tag:'<data>',type:'inline',desc:'将内容与机器可读的值关联。value 属性提供标准化数据',attrs:['value'],code:'<data value="UPC:036000291452">番茄罐头</data>',preview:'<p style="font-size:.88em">商品：<data value="UPC:036000291452" style="color:#d4a843;font-weight:500">番茄罐头</data></p>'},
+    ]
+  },
+  {
+    id:'link', name:'链接', icon:'fa-link',
+    desc:'超链接是 Web 的核心，连接页面与资源',
+    elements:[
+      {tag:'<a>',type:'inline',desc:'超链接锚点，href 指定目标地址。target="_blank" 新窗口打开，download 触发下载，#id 跳转到页内锚点',attrs:['href','target','rel','download','hreflang','type','title'],code:'<!-- 外部链接 -->\n<a href="https://example.com"\n   target="_blank"\n   rel="noopener noreferrer">\n  访问网站\n</a>\n\n<!-- 页内锚点 -->\n<a href="#section1">跳转到第一节</a>\n\n<!-- 邮件 -->\n<a href="mailto:test@example.com">发邮件</a>\n\n<!-- 电话 -->\n<a href="tel:+8613800138000">拨打电话</a>\n\n<!-- 下载 -->\n<a href="file.zip" download>下载文件</a>',preview:'<div style="display:flex;flex-direction:column;gap:6px;font-size:.88em"><a href="#" onclick="return false" style="color:#d4a843;text-decoration:none;border-bottom:1px dashed #d4a843">外部链接</a><a href="#" onclick="return false" style="color:#d4a843;text-decoration:none;border-bottom:1px dashed #d4a843">页内锚点跳转</a><a href="#" onclick="return false" style="color:#d4a843;text-decoration:none;border-bottom:1px dashed #d4a843">发邮件 mailto:</a><a href="#" onclick="return false" style="color:#d4a843;text-decoration:none;border-bottom:1px dashed #d4a843">拨打电话 tel:</a></div>'},
+    ]
+  },
+];
+
+// ===== 参考数据 =====
+
+// 全局属性
+const globalAttrs = [
+  {name:'id',desc:'元素唯一标识符，同一页面不可重复',example:'id="main-content"'},
+  {name:'class',desc:'CSS 类名，一个元素可多个类名（空格分隔）',example:'class="btn btn-primary"'},
+  {name:'style',desc:'内联样式，直接写 CSS 声明',example:'style="color: red; font-size: 16px"'},
+  {name:'title',desc:'鼠标悬停时的提示文本',example:'title="点击查看详情"'},
+  {name:'data-*',desc:'自定义数据属性，* 为任意名称，JS 通过 dataset 访问',example:'data-id="42" data-name="test"'},
+  {name:'hidden',desc:'隐藏元素，等同 display:none',example:'hidden'},
+  {name:'tabindex',desc:'Tab 键聚焦顺序，0 加入自然顺序，-1 可编程聚焦',example:'tabindex="0"'},
+  {name:'role',desc:'ARIA 角色，增强无障碍语义',example:'role="navigation"'},
+  {name:'aria-*',desc:'ARIA 状态和属性系列，提升无障碍体验',example:'aria-label="关闭" aria-expanded="true"'},
+  {name:'draggable',desc:'是否可拖拽',example:'draggable="true"'},
+  {name:'contenteditable',desc:'元素是否可编辑',example:'contenteditable="true"'},
+  {name:'spellcheck',desc:'是否启用拼写检查',example:'spellcheck="false"'},
+  {name:'translate',desc:'是否允许翻译（用于机器翻译工具）',example:'translate="no"'},
+  {name:'lang',desc:'元素内容的语言（可覆盖 html 的 lang）',example:'lang="en"'},
+  {name:'dir',desc:'文本方向：ltr（左到右）或 rtl（右到左）',example:'dir="rtl"'},
+  {name:'accesskey',desc:'快捷键，按下后聚焦元素',example:'accesskey="s"'},
+];
+
+// 块级 vs 行内对比
+const blockInlineComparison = [
+  {prop:'排列方式',block:'独占一行',inline:'同一行排列'},
+  {prop:'设置宽度 width',block:'生效，默认 100%',inline:'不生效'},
+  {prop:'设置高度 height',block:'生效',inline:'不生效'},
+  {prop:'上下 margin',block:'生效（注意折叠）',inline:'不生效'},
+  {prop:'左右 margin',block:'生效',inline:'生效'},
+  {prop:'上下 padding',block:'生效，影响布局',inline:'视觉生效不影响布局'},
+  {prop:'左右 padding',block:'生效',inline:'生效'},
+  {prop:'可包含',block:'块级 + 行内元素',inline:'仅行内元素'},
+  {prop:'默认 display',block:'display: block',inline:'display: inline'},
+];
+
+// HTML 实体字符
+const entities = [
+  {char:'&amp;',name:'和号',code:'&amp;'},
+  {char:'&lt;',name:'小于号',code:'&lt;'},
+  {char:'&gt;',name:'大于号',code:'&gt;'},
+  {char:'&quot;',name:'双引号',code:'&quot;'},
+  {char:'&apos;',name:'单引号',code:'&apos;'},
+  {char:'&nbsp;',name:'不换行空格',code:'&nbsp;'},
+  {char:'&copy;',name:'版权符号',code:'&copy;'},
+  {char:'&reg;',name:'注册商标',code:'&reg;'},
+  {char:'&trade;',name:'商标符号',code:'&trade;'},
+  {char:'&times;',name:'乘号',code:'&times;'},
+  {char:'&divide;',name:'除号',code:'&divide;'},
+  {char:'&plusmn;',name:'正负号',code:'&plusmn;'},
+  {char:'&yen;',name:'人民币符号',code:'&yen;'},
+  {char:'&euro;',name:'欧元符号',code:'&euro;'},
+  {char:'&pound;',name:'英镑符号',code:'&pound;'},
+  {char:'&cent;',name:'分符号',code:'&cent;'},
+  {char:'&sect;',name:'章节符号',code:'&sect;'},
+  {char:'&para;',name:'段落符号',code:'&para;'},
+  {char:'&dagger;',name:'匕首符号',code:'&dagger;'},
+  {char:'&larr;',name:'左箭头',code:'&larr;'},
+  {char:'&rarr;',name:'右箭头',code:'&rarr;'},
+  {char:'&uarr;',name:'上箭头',code:'&uarr;'},
+  {char:'&darr;',name:'下箭头',code:'&darr;'},
+  {char:'&harr;',name:'双向箭头',code:'&harr;'},
+  {char:'&laquo;',name:'左双尖括号',code:'&laquo;'},
+  {char:'&raquo;',name:'右双尖括号',code:'&raquo;'},
+  {char:'&mdash;',name:'长破折号',code:'&mdash;'},
+  {char:'&ndash;',name:'短破折号',code:'&ndash;'},
+  {char:'&hellip;',name:'省略号',code:'&hellip;'},
+  {char:'&bull;',name:'实心圆点',code:'&bull;'},
+  {char:'&middot;',name:'间隔点',code:'&middot;'},
+  {char:'&hearts;',name:'爱心',code:'&hearts;'},
+  {char:'&starf;',name:'实心星',code:'&starf;'},
+  {char:'&check;',name:'对勾',code:'&check;'},
+  {char:'&cross;',name:'叉号',code:'&cross;'},
+];
+
+// ===== 渲染逻辑 =====
+
+const mainContent = document.getElementById('mainContent');
+const sidebarNav = document.getElementById('sidebarNav');
+const searchInput = document.getElementById('searchInput');
+
+// 类型标记映射
+const typeBadge = {
+  block: '<span class="card-badge badge-block">块级</span>',
+  inline: '<span class="card-badge badge-inline">行内</span>',
+  void: '<span class="card-badge badge-void">空元素</span>',
+  meta: '<span class="card-badge badge-meta">元信息</span>',
+  interactive: '<span class="card-badge badge-interactive">交互</span>',
+};
+
+// 构建侧边栏导航
+function buildNav() {
+  let html = '';
+  categories.forEach(cat => {
+    html += `<div class="nav-cat">${cat.name}</div>`;
+    html += `<a class="nav-link" href="#${cat.id}" data-cat="${cat.id}">
+      <i class="fa-solid ${cat.icon}"></i>
+      <span>${cat.name}</span>
+      <span class="sidebar-count">${cat.elements.length}</span>
+    </a>`;
+  });
+  // 参考章节
+  html += '<div class="nav-cat" style="margin-top:12px;border-top:1px solid var(--border);padding-top:14px">参考表</div>';
+  html += '<a class="nav-link" href="#ref-block-inline" data-cat="ref-block-inline"><i class="fa-solid fa-arrows-left-right"></i><span>块级 vs 行内</span></a>';
+  html += '<a class="nav-link" href="#ref-attrs" data-cat="ref-attrs"><i class="fa-solid fa-globe"></i><span>全局属性</span></a>';
+  html += '<a class="nav-link" href="#ref-entities" data-cat="ref-entities"><i class="fa-solid fa-hashtag"></i><span>实体字符</span></a>';
+  html += '<a class="nav-link" href="#ref-html5" data-cat="ref-html5"><i class="fa-solid fa-rocket"></i><span>HTML5 新特性</span></a>';
+  sidebarNav.innerHTML = html;
+
+  // 导航点击
+  sidebarNav.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', () => {
+      // 移动端关闭侧边栏
+      sidebar.classList.remove('open');
+      sidebarOverlay.classList.remove('open');
+    });
+  });
+}
+
+// 构建主内容
+function buildContent() {
+  let html = '';
+
+  // Hero
+  html += `<div style="margin-bottom:3rem">
+    <h1 style="font-family:'Space Grotesk','Noto Sans SC';font-size:clamp(2rem,5vw,3rem);font-weight:700;margin-bottom:.4rem">
+      HTML <span style="color:var(--accent)">完全知识手册</span>
+    </h1>
+    <p style="color:var(--fg3);font-size:.95rem;max-width:560px">
+      涵盖全部 HTML 标签、属性、实体字符与核心概念，每个标签都配有代码示例和实时渲染预览
+    </p>
+    <div style="display:flex;gap:2rem;margin-top:1.25rem">
+      <div><span style="font-family:'Space Grotesk';font-size:1.6rem;font-weight:700;color:var(--accent)">${categories.reduce((s,c)=>s+c.elements.length,0)}</span><br><span style="font-size:.75rem;color:var(--fg3)">标签条目</span></div>
+      <div><span style="font-family:'Space Grotesk';font-size:1.6rem;font-weight:700;color:var(--green)">${globalAttrs.length}</span><br><span style="font-size:.75rem;color:var(--fg3)">全局属性</span></div>
+      <div><span style="font-family:'Space Grotesk';font-size:1.6rem;font-weight:700;color:var(--cyan)">${entities.length}</span><br><span style="font-size:.75rem;color:var(--fg3)">实体字符</span></div>
+    </div>
+  </div>`;
+
+  // 各分类
+  categories.forEach(cat => {
+    html += `<section class="cat-section reveal" id="${cat.id}">
+      <h2 class="cat-title"><i class="fa-solid ${cat.icon}"></i> ${cat.name}</h2>
+      <p class="cat-desc">${cat.desc}</p>
+      <div class="cards" data-cat="${cat.id}">`;
+
+    cat.elements.forEach(el => {
+      html += renderCard(el);
+    });
+
+    html += `</div></section>`;
+  });
+
+  // 块级 vs 行内
+  html += renderBlockInlineTable();
+
+  // 全局属性
+  html += renderGlobalAttrs();
+
+  // 实体字符
+  html += renderEntities();
+
+  // HTML5 新特性
+  html += renderHTML5Features();
+
+  mainContent.innerHTML = html;
+
+  // 初始化复制按钮
+  mainContent.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', () => copyCode(btn));
+  });
+
+  // 初始化滚动显现
+  initScrollReveal();
+  // 初始化导航高亮
+  initNavHighlight();
+  // 初始化实体字符点击复制
+  initEntityCopy();
+}
+
+// 渲染单个卡片
+function renderCard(el) {
+  const badge = typeBadge[el.type] || '';
+  const attrsHtml = (el.attrs || []).map(a => `<span class="card-attr">${a}</span>`).join('');
+
+  let previewHtml;
+  if (el.noPreview) {
+    previewHtml = `<div class="card-no-preview"><i class="fa-solid fa-eye-slash" style="margin-right:4px"></i> 此标签无可见渲染</div>`;
+  } else {
+    previewHtml = `<div class="card-preview">${el.preview || ''}</div>`;
+  }
+
+  // 安全转义代码用于显示
+  const safeCode = el.code.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+  return `<div class="card" data-tag="${el.tag.toLowerCase()}" data-desc="${el.desc}">
+    <div class="card-head">
+      <span class="card-tag">${el.tag.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</span>
+      ${badge}
+      <div class="card-attrs">${attrsHtml}</div>
+    </div>
+    <div class="card-desc">${el.desc}</div>
+    <div class="card-code">
+      <pre>${safeCode}</pre>
+      <button class="copy-btn" aria-label="复制代码"><i class="fa-regular fa-copy"></i> 复制</button>
+    </div>
+    ${previewHtml}
+  </div>`;
+}
+
+// 块级 vs 行内对比表
+function renderBlockInlineTable() {
+  let rows = blockInlineComparison.map(r =>
+    `<tr><td style="font-weight:500;color:var(--fg)">${r.prop}</td><td style="color:#e8c96a">${r.block}</td><td style="color:#7dd4e3">${r.inline}</td></tr>`
+  ).join('');
+
+  return `<section class="ref-section reveal" id="ref-block-inline">
+    <h2 class="ref-title"><i class="fa-solid fa-arrows-left-right"></i> 块级元素 vs 行内元素</h2>
+    <div style="overflow-x:auto;border:1px solid var(--border);border-radius:var(--r)">
+      <table class="ref-table">
+        <thead><tr><th style="width:22%">属性</th><th style="width:39%"><span style="color:var(--accent)">块级 Block</span></th><th style="width:39%"><span style="color:var(--cyan)">行内 Inline</span></th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+    <div style="margin-top:1rem;padding:12px 16px;background:var(--accent-d);border:1px solid var(--border-accent);border-radius:var(--rs);font-size:.82rem;color:var(--fg2)">
+      <strong style="color:var(--accent)">关键点：</strong>块级元素垂直相邻的 margin 会<strong>折叠合并</strong>（取较大值而非相加）。使用 <code style="background:var(--bg);padding:1px 6px;border-radius:3px">flex/grid + gap</code> 可完全避免此问题。
+    </div>
+  </section>`;
+}
+
+// 全局属性
+function renderGlobalAttrs() {
+  let rows = globalAttrs.map(a =>
+    `<tr><td><code>${a.name}</code></td><td>${a.desc}</td><td style="white-space:nowrap"><code>${a.example}</code></td></tr>`
+  ).join('');
+
+  return `<section class="ref-section reveal" id="ref-attrs">
+    <h2 class="ref-title"><i class="fa-solid fa-globe"></i> 全局属性</h2>
+    <p style="color:var(--fg3);font-size:.88rem;margin-bottom:1rem">所有 HTML 元素都可使用的属性</p>
+    <div style="overflow-x:auto;border:1px solid var(--border);border-radius:var(--r)">
+      <table class="ref-table">
+        <thead><tr><th style="width:18%">属性</th><th style="width:47%">说明</th><th style="width:35%">示例</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+  </section>`;
+}
+
+// 实体字符
+function renderEntities() {
+  let items = entities.map(e => {
+    // 安全渲染字符
+    const safeChar = e.char.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    return `<div class="entity-item" data-entity="${e.code}" title="点击复制 ${e.code}">
+      <div class="entity-char">${safeChar}</div>
+      <div class="entity-info">
+        <div class="en-name">${e.name}</div>
+        <div class="en-code">${e.code}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  return `<section class="ref-section reveal" id="ref-entities">
+    <h2 class="ref-title"><i class="fa-solid fa-hashtag"></i> HTML 实体字符</h2>
+    <p style="color:var(--fg3);font-size:.88rem;margin-bottom:1rem">在 HTML 中需要转义的特殊字符和常用符号，点击可复制</p>
+    <div class="entity-grid">${items}</div>
+  </section>`;
+}
+
+// HTML5 新特性
+function renderHTML5Features() {
+  const features = [
+    {title:'语义化标签',desc:'新增 header、nav、main、section、article、aside、footer、figure 等标签，让页面结构具有语义含义，有利于 SEO 和无障碍',tags:['<header>','<nav>','<main>','<section>','<article>','<aside>','<footer>']},
+    {title:'表单增强',desc:'新增 email、url、number、range、date、color 等输入类型，以及 placeholder、required、pattern、autofocus 等属性，原生实现验证',tags:['type="email"','type="date"','placeholder','required','pattern']},
+    {title:'多媒体支持',desc:'原生 video、audio 标签取代 Flash，canvas 提供 2D/3D 绘图能力，SVG 可直接内嵌',tags:['<video>','<audio>','<canvas>','<svg>']},
+    {title:'本地存储',desc:'Web Storage（localStorage/sessionStorage）提供比 cookie 更大容量、更简单的客户端存储方案',tags:['localStorage','sessionStorage']},
+    {title:'离线与缓存',desc:'Application Cache（已废弃）→ Service Worker + Cache API，实现离线访问和资源缓存策略',tags:['Service Worker','Cache API']},
+    {title:'地理定位',desc:'Geolocation API 获取用户地理位置（需用户授权），用于地图、附近搜索等场景',tags:['navigator.geolocation']},
+    {title:'拖放 API',desc:'原生 draggable 属性和 Drag & Drop 事件，无需 JS 库即可实现拖放交互',tags:['draggable','ondragstart','ondrop']},
+    {title:'Web Workers',desc:'在后台线程运行 JavaScript，不阻塞 UI 主线程，适合计算密集型任务',tags:['Worker','postMessage']},
+    {title:'WebSocket',desc:'全双工通信协议，实现服务端主动推送，适用于聊天、实时数据等场景',tags:['WebSocket','onmessage']},
+    {title:'新增 API',desc:'History API（路由）、Fullscreen API、Notification API、Fetch API、IntersectionObserver、MutationObserver 等',tags:['history.pushState','fetch()','IntersectionObserver']},
+  ];
+
+  let items = features.map(f =>
+    `<div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem;transition:border-color .25s" onmouseenter="this.style.borderColor='var(--border2)'" onmouseleave="this.style.borderColor='var(--border)'">
+      <h3 style="font-size:.95rem;font-weight:600;margin-bottom:.4rem">${f.title}</h3>
+      <p style="font-size:.82rem;color:var(--fg2);line-height:1.6;margin-bottom:.6rem">${f.desc}</p>
+      <div style="display:flex;flex-wrap:wrap;gap:4px">${f.tags.map(t=>`<span style="font-family:'Space Grotesk',monospace;font-size:.68rem;color:var(--accent);background:var(--accent-d);padding:2px 7px;border-radius:3px">${t}</span>`).join('')}</div>
+    </div>`
+  ).join('');
+
+  return `<section class="ref-section reveal" id="ref-html5">
+    <h2 class="ref-title"><i class="fa-solid fa-rocket"></i> HTML5 新特性概览</h2>
+    <p style="color:var(--fg3);font-size:.88rem;margin-bottom:1.25rem">HTML5 不只是新增标签，还包括一系列 API 和能力扩展</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px">${items}</div>
+  </section>`;
+}
+
+// 复制代码
+function copyCode(btn) {
+  const pre = btn.closest('.card-code').querySelector('pre');
+  const text = pre.textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.innerHTML = '<i class="fa-solid fa-check"></i> 已复制';
+    btn.style.color = 'var(--green)';
+    setTimeout(() => {
+      btn.innerHTML = '<i class="fa-regular fa-copy"></i> 复制';
+      btn.style.color = '';
+    }, 1500);
+  });
+}
+
+// 实体字符点击复制
+function initEntityCopy() {
+  document.querySelectorAll('.entity-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const code = item.dataset.entity;
+      // 将实体解码为实际字符
+      const tmp = document.createElement('div');
+      tmp.innerHTML = code;
+      const char = tmp.textContent;
+      navigator.clipboard.writeText(char).then(() => {
+        item.style.borderColor = 'var(--accent)';
+        item.style.background = 'var(--accent-d)';
+        setTimeout(() => {
+          item.style.borderColor = '';
+          item.style.background = '';
+        }, 800);
+      });
+    });
+  });
+}
+
+// 搜索过滤
+searchInput.addEventListener('input', () => {
+  const query = searchInput.value.toLowerCase().trim();
+  const allCards = mainContent.querySelectorAll('.card');
+  const allSections = mainContent.querySelectorAll('.cat-section');
+
+  if (!query) {
+    allCards.forEach(c => c.style.display = '');
+    allSections.forEach(s => {
+      s.style.display = '';
+      const grid = s.querySelector('.cards');
+      if (grid) grid.innerHTML = grid.innerHTML; // 不，这样会丢失事件
+    });
+    // 恢复所有卡片和分区
+    allCards.forEach(c => { c.style.display = ''; c.classList.remove('no-results'); });
+    allSections.forEach(s => s.style.display = '');
+    // 恢复参考章节
+    mainContent.querySelectorAll('.ref-section').forEach(s => s.style.display = '');
+    return;
+  }
+
+  // 隐藏所有参考章节
+  mainContent.querySelectorAll('.ref-section').forEach(s => s.style.display = 'none');
+
+  allSections.forEach(section => {
+    const cards = section.querySelectorAll('.card');
+    let visibleCount = 0;
+    cards.forEach(card => {
+      const tag = (card.dataset.tag || '').toLowerCase();
+      const desc = (card.dataset.desc || '').toLowerCase();
+      const codeText = card.querySelector('pre')?.textContent.toLowerCase() || '';
+      if (tag.includes(query) || desc.includes(query) || codeText.includes(query)) {
+        card.style.display = '';
+        visibleCount++;
+      } else {
+        card.style.display = 'none';
+      }
+    });
+    section.style.display = visibleCount > 0 ? '' : 'none';
+  });
+});
+
+// 滚动显现
+function initScrollReveal() {
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) e.target.classList.add('visible');
+    });
+  }, { threshold: 0.05, rootMargin: '0px 0px -30px 0px' });
+  mainContent.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+}
+
+// 导航高亮
+function initNavHighlight() {
+  const links = sidebarNav.querySelectorAll('.nav-link');
+  const allSections = mainContent.querySelectorAll('section[id]');
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const link = sidebarNav.querySelector(`.nav-link[href="#${e.target.id}"]`);
+        if (link) link.classList.add('active');
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '-60px 0px -50% 0px' });
+
+  allSections.forEach(s => observer.observe(s));
+}
+
+// 移动端菜单
+const menuBtn = document.getElementById('menuBtn');
+const sidebar = document.getElementById('sidebar');
+const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+menuBtn.addEventListener('click', () => {
+  sidebar.classList.toggle('open');
+  sidebarOverlay.classList.toggle('open');
+});
+sidebarOverlay.addEventListener('click', () => {
+  sidebar.classList.remove('open');
+  sidebarOverlay.classList.remove('open');
+});
+
+// 初始化
+buildNav();
+buildContent();
+</script>
+</body>
+</html>
